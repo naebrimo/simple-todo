@@ -2,42 +2,25 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
-class LoginController extends Controller
+class AdminLoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
+    protected $redirectTo = '/admin';
 
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('guest:user')->except('logout');
+        $this->middleware('guest:admin')->except('logout');
     }
+
+    protected function showLoginForm()
+    {
+        return view('auth/adminlogin');
+    }
+
     protected function login(Request $request)
     {
         if(filter_var($request->usernameOrEmail, FILTER_VALIDATE_EMAIL))
@@ -67,17 +50,21 @@ class LoginController extends Controller
         $this->validate($request, $validateParams);
 
         $remember = $request->remember;
-        if(Auth::guard()->attempt($credentials, $remember))
+        if(Auth::guard('admin')->attempt($credentials, $remember))
         {
             return redirect()->intended($this->redirectTo);
         }
         session()->flash('message', 'Access denied.');
         return redirect()->back()->withInput($request->only('usernameOrEmail', 'remember'));
     }
-    public function logout(Request $request)
+
+    protected function logout(Request $request)
     {
-        $this->guard('admin')->logout();
+        Auth::guard('admin')->logout();
         return $this->loggedOut($request) ?: redirect('/');
     }
-
+    protected function loggedOut(Request $request)
+    {
+        //
+    }
 }

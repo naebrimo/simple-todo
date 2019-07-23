@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Todo;
 use App\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TodoController extends Controller
+class UserController extends Controller
 {
     protected $rowsPerPage = 5;
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('auth:user');
+        $this->middleware('auth:admin');
     }
     /**
      * Display a listing of the resource.
@@ -27,12 +21,12 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = Todo::where('active', 1)
+        $users = User::where('active', 1)
         ->orderby('updated_at', 'asc')
         ->paginate($this->rowsPerPage);
 
-        return view('todos/index',[
-            'todos' => $todos
+        return view('users/index',[
+            'users' => $users
         ]);
     }
     /**
@@ -45,15 +39,16 @@ class TodoController extends Controller
         if($request->q == '') return redirect(route('todo.index'));
         $request->validate(['q' => 'string|max:100']);
 
-        $todos = Todo::where('active', 1)
+        $users = User::where('active', 1)
         ->where(function($query) use($request){
-            $query->where('title', 'like', '%'.$request->q.'%')
-                ->orWhere('description', 'like', '%'.$request->q.'%');
+            $query->where('name', 'like', '%'.$request->q.'%')
+                ->orWhere('email', 'like', '%'.$request->q.'%')
+                ->orWhere('username', 'like', '%'.$request->q.'%');
         })
         ->paginate($this->rowsPerPage);
 
-        return view('todos/index',[
-            'todos' => $todos,
+        return view('users/index',[
+            'users' => $users,
             'search' => $request->q
         ]);
     }
@@ -66,28 +61,14 @@ class TodoController extends Controller
     {
         if(isset($request->date) && in_array(strtolower($request->date), array('asc','desc')))
         {
-            $todos = Todo::where('active', TRUE)
+            $users = User::where('active', TRUE)
             ->orderby('updated_at', $request->date)
             ->paginate($this->rowsPerPage);
             $sort['date'] = ($request->date == 'asc') ? 'desc' : 'asc';
         }
-        elseif(isset($request->title) && in_array(strtolower($request->title), array('asc','desc')))
-        {
-            $todos = Todo::where('active', TRUE)
-            ->orderby('title', $request->title)
-            ->paginate($this->rowsPerPage);
-            $sort['title'] = ($request->title == 'asc') ? 'desc' : 'asc';
-        }
-        elseif(isset($request->description) && in_array(strtolower($request->description), array('asc','desc')))
-        {
-            $todos = Todo::where('active', TRUE)
-            ->orderby('description', $request->description)
-            ->paginate($this->rowsPerPage);
-            $sort['description'] = ($request->description == 'asc') ? 'desc' : 'asc';
-        }
 
-        return view('todos/index',[
-            'todos' => $todos,
+        return view('users/index',[
+            'users' => $users,
             'sort' => $sort
         ]);
     }

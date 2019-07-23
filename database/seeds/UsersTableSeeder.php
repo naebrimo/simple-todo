@@ -17,12 +17,16 @@ class UsersTableSeeder extends Seeder
                 'email' => 'johndoe@example.com',
                 'username' => 'johndoe',
                 'password' => bcrypt('password123'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'jane doe',
                 'email' => 'janedoe@example.com',
                 'username' => 'janedoe',
                 'password' => bcrypt('password123'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ];
 

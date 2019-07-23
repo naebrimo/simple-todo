@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class AdminController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -13,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:user');
+        $this->middleware('auth:admin');
     }
 
     /**
@@ -23,6 +24,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect(route('todo.index'));
+        return redirect(route('user.index'));
     }
 }

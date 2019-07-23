@@ -77,7 +77,7 @@
                                             <a href="{{ route('todo.show', $todo->id ) }}" class="btn btn-link btn-sm text-capitalize">show</a>
                                             @if(Auth::user()->id == $todo->user_id)
                                                 <a href="{{ route('todo.edit', $todo->id ) }}" class="btn btn-link btn-sm text-capitalize">edit</a>
-                                                <form action="{{ route('todo.destroy', $todo->id) }}" method="POST" enctype="multipart/form-data" class="d-inline">
+                                                <form action="{{ route('todo.confirm', $todo->id) }}" method="POST" enctype="multipart/form-data" class="d-inline">
                                                     @method('DELETE')
                                                     @csrf
                                                     <button type="submit" class="btn btn-link btn-sm text-capitalize">delete</button>

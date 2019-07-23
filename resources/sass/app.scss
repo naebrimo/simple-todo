@@ -7,7 +7,7 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.pagination
+ul.pagination[role="navigation"]
 {
     justify-content: center!important;
 }
