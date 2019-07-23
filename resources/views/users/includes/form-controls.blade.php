@@ -1,55 +1,91 @@
 <div class="card-body">
     <div class="row form-group">
-        <div class="col-3">
-            <label class="text-capitalize float-left" for="dateInput"><strong>date</strong></label>
+        <div class="col-4">
+            <label class="text-capitalize float-left" for="nameInput"><strong>name</strong></label>
             <small class="text-capitalize text-danger float-right">required</small>
         </div>
-        <div class="col-4">
-            @if(isset($todo) && isset($todo->updated_at))
-                <input id="titleInput" class="form-control" name="date" type="date" value="{{ $todo->updated_at->format('Y-m-d') }}" placeholder="Your date here ..." maxlength="30" required autofocus>
+        <div class="col-5">
+            @if(isset($user) && isset($user->name))
+                <input id="nameInput" class="form-control" name="name" type="text" value="{{ $user->name }}" placeholder="User name here ..." maxlength="99" required autofocus>
             @else
-                <input id="titleInput" class="form-control" name="date" type="date" value="{{ old('date') }}" placeholder="Your date here ..." maxlength="30" required autofocus>
+                <input id="nameInput" class="form-control" name="name" type="text" value="{{ old('name') }}" placeholder="User name here ..." maxlength="99" required autofocus>
             @endif
         </div>
-        <div class="col-5">
-            @error('date')
+        <div class="col-3">
+            @error('name')
                 <small class="text-danger text-left">{{ $message }}</small>
             @enderror
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-3">
-            <label class="text-capitalize float-left" for="titleInput"><strong>title</strong></label>
+        <div class="col-4">
+            <label class="text-capitalize float-left" for="emailInput"><strong>email</strong></label>
             <small class="text-capitalize text-danger float-right">required</small>
         </div>
-        <div class="col-4">
-            @if(isset($todo) && isset($todo->title))
-                <input id="titleInput" class="form-control" name="title" type="text" value="{{ $todo->title }}" placeholder="Your title here ..." maxlength="99" required>
+        <div class="col-5">
+            @if(isset($user) && isset($user->email))
+                <input id="emailInput" class="form-control" name="email" type="email" value="{{ $user->email }}" placeholder="User email here ..." maxlength="99" required>
             @else
-                <input id="titleInput" class="form-control" name="title" type="text" value="{{ old('title') }}" placeholder="Your title here ..." maxlength="99" required>
+                <input id="emailInput" class="form-control" name="email" type="email" value="{{ old('email') }}" placeholder="User email here ..." maxlength="99" required>
             @endif
         </div>
-        <div class="col-5">
-            @error('title')
+        <div class="col-3">
+            @error('email')
                 <small class="text-danger text-left">{{ $message }}</small>
             @enderror
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-3">
-            <label class="text-capitalize float-left" for="descriptionInput"><strong>description</strong></label>
+        <div class="col-4">
+            <label class="text-capitalize float-left" for="usernameInput"><strong>username</strong></label>
             <small class="text-capitalize text-danger float-right">required</small>
         </div>
-        <div class="col-9">
-            @if(isset($todo) && isset($todo->description))
-                <textarea id="descriptionInput" class="form-control" name="description" placeholder="Your description here ..." maxlength="99" cols="30" rows="5" required>{{ $todo->description }}</textarea>
+        <div class="col-5">
+            @if(isset($user) && isset($user->username))
+                <input id="usernameInput" class="form-control" name="username" type="text" value="{{ $user->username }}" placeholder="Username here ..." maxlength="99" required>
             @else
-                <textarea id="descriptionInput" class="form-control" name="description" placeholder="Your description here ..." maxlength="99" cols="30" rows="5" required>{{  old('description') }}</textarea>
+                <input id="usernameInput" class="form-control" name="username" type="text" value="{{ old('username') }}" placeholder="Username here ..." maxlength="99" required>
             @endif
         </div>
-        <div class="col-9 offset-3">
-            @error('description')
-                <small class="text-danger text-center">{{ $message }}</small>
+        <div class="col-3">
+            @error('username')
+                <small class="text-danger text-left">{{ $message }}</small>
+            @enderror
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-4">
+            <label class="text-capitalize float-left" for="passwordInput"><strong>password</strong></label>
+            <small class="text-capitalize text-danger float-right">required</small>
+        </div>
+        <div class="col-5">
+            @if(isset($user) && isset($user->password))
+                <input id="passwordInput" class="form-control" name="password" type="password" value="" placeholder="User password here ..." maxlength="99" required>
+            @else
+                <input id="passwordInput" class="form-control" name="password" type="password" value="" placeholder="User password here ..." maxlength="99" required>
+            @endif
+        </div>
+        <div class="col-3">
+            @error('password')
+                <small class="text-danger text-left">{{ $message }}</small>
+            @enderror
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-4">
+            <label class="text-capitalize float-left" for="passwordConfirmInput"><strong>confirm password</strong></label>
+            <small class="text-capitalize text-danger float-right">required</small>
+        </div>
+        <div class="col-5">
+            @if(isset($user) && isset($user->password_confirmation))
+                <input id="passwordConfirmInput" class="form-control" name="password_confirmation" type="password" value="" placeholder="Re-enter your password here ..." maxlength="99" required>
+            @else
+                <input id="passwordConfirmInput" class="form-control" name="password_confirmation" type="password" value="" placeholder="Re-enter your password here ..." maxlength="99" required>
+            @endif
+        </div>
+        <div class="col-3">
+            @error('password_confirmation')
+                <small class="text-danger text-left">{{ $message }}</small>
             @enderror
         </div>
     </div>

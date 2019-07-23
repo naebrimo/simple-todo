@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('active', 1)
+        $users = User::where('active', TRUE)
         ->orderby('updated_at', 'asc')
         ->paginate($this->rowsPerPage);
 
@@ -36,10 +36,10 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        if($request->q == '') return redirect(route('todo.index'));
+        if($request->q == '') return redirect(route('user.index'));
         $request->validate(['q' => 'string|max:100']);
 
-        $users = User::where('active', 1)
+        $users = User::where('active', TRUE)
         ->where(function($query) use($request){
             $query->where('name', 'like', '%'.$request->q.'%')
                 ->orWhere('email', 'like', '%'.$request->q.'%')
@@ -66,6 +66,27 @@ class UserController extends Controller
             ->paginate($this->rowsPerPage);
             $sort['date'] = ($request->date == 'asc') ? 'desc' : 'asc';
         }
+        elseif(isset($request->name) && in_array(strtolower($request->name), array('asc','desc')))
+        {
+            $users = User::where('active', TRUE)
+            ->orderby('name', $request->name)
+            ->paginate($this->rowsPerPage);
+            $sort['name'] = ($request->name == 'asc') ? 'desc' : 'asc';
+        }
+        elseif(isset($request->email) && in_array(strtolower($request->email), array('asc','desc')))
+        {
+            $users = User::where('active', TRUE)
+            ->orderby('email', $request->email)
+            ->paginate($this->rowsPerPage);
+            $sort['email'] = ($request->email == 'asc') ? 'desc' : 'asc';
+        }
+        elseif(isset($request->username) && in_array(strtolower($request->username), array('asc','desc')))
+        {
+            $users = User::where('active', TRUE)
+            ->orderby('username', $request->username)
+            ->paginate($this->rowsPerPage);
+            $sort['username'] = ($request->username == 'asc') ? 'desc' : 'asc';
+        }
 
         return view('users/index',[
             'users' => $users,
@@ -82,31 +103,30 @@ class UserController extends Controller
     {
         if($request->isMethod('post'))
         {
-            $todo = (object) $this->validateInputs($request);
-            $todo->action = 'create';
+            $user = (object) $this->validateInputs($request);
+            $user->action = 'create';
         }
         elseif($request->isMethod('patch'))
         {
-            $todo = (object) $this->validateInputs($request);
-            $todo->id = $id;
-            $todo->action = 'update';
+            $user = (object) $this->validateInputs($request);
+            $user->id = $id;
+            $user->action = 'update';
         }
         elseif($request->isMethod('delete'))
         {
-            $todo = Todo::where('id', $id)
-            ->where('user_id', Auth::user()->id)
-            ->where('active', 1)
+            $user = User::where('id', $id)
+            ->where('active', TRUE)
             ->first();
-            if(!is_null($todo)) $todo->action = 'destroy';
+            if(!is_null($user)) $user->action = 'destroy';
         }
 
-        if(isset($todo))
+        if(isset($user))
         {
-            session()->flash('todo', $todo);
+            session()->flash('user', $user);
             session()->regenerate();
 
-            return view('todos/confirm',[
-                'todo' => $todo
+            return view('users/confirm',[
+                'user' => $user
             ]);
         }
         return $this->redirectToIndexPage();
@@ -118,7 +138,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('todos/create');
+        return view('users/create');
     }
     /**
      * Display the complete notification page.
@@ -129,7 +149,7 @@ class UserController extends Controller
     {
         if(session()->has('action'))
         {
-            return view('todos/complete');
+            return view('users/complete');
         }
         return $this->redirectToIndexPage();
     }
@@ -161,8 +181,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $todo = $this->getSessionFromConfirmPage($request);
-        return $this->createOrUpdate($request, $todo);
+        $user = $this->getSessionFromConfirmPage($request);
+        return $this->createOrUpdate($request, $user);
     }
     /**
      * Update the specified resource in storage.
@@ -173,8 +193,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $todo = $this->getSessionFromConfirmPage($request, $id);
-        return $this->createOrUpdate($request, $todo);
+        $user = $this->getSessionFromConfirmPage($request, $id);
+        return $this->createOrUpdate($request, $user);
     }
     /**
      * Remove the specified resource from storage.
@@ -184,36 +204,38 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $todo = $this->getSessionFromConfirmPage($request, $id);
-        return $this->createOrUpdate($request, $todo);
+        $user = $this->getSessionFromConfirmPage($request, $id);
+        return $this->createOrUpdate($request, $user);
     }
 
     private function validateInputs($request)
     {
         return $request->validate([
-            'date' => 'required|date|after_or_equal:today',
-            'title' => 'required|min:2|max:99',
-            'description' => 'required|min:2|max:99',
+            'name' => 'required|min:3|max:99',
+            'email' => 'required|email|unique:users|min:3|max:99',
+            'username' => 'required|unique:users|min:3|max:99',
+            'password' => 'required|confirmed|min:3',
         ]);
     }
 
     private function defaultParameters($request)
     {
         return [
-            'title' => $request->title,
-            'description' => $request->description,
-            'updated_at' => $request->date,
+            'name' => strtolower($request->name),
+            'email' => strtolower($request->email),
+            'username' => strtolower($request->username),
+            'password' => bcrypt($request->password),
             'active' => TRUE,
         ];
     }
 
     private function redirectToCompletePage()
     {
-        session()->forget('todo');
+        session()->forget('user');
         session()->reflash();
         session()->regenerate();
 
-        return redirect(route('todo.complete'));
+        return redirect(route('user.complete'));
     }
 
     private function redirectToIndexPage()
@@ -223,56 +245,57 @@ class UserController extends Controller
             session()->forget('action');
         }
 
-        if(session()->has('todo'))
+        if(session()->has('user'))
         {
-            session()->forget('todo');
+            session()->forget('user');
         }
 
         session()->regenerate();
-        return redirect(route('todo.index'));
+        return redirect(route('user.index'));
     }
 
     private function getSessionFromConfirmPage($request, $id = null)
     {
-
-
-        if(session()->has('todo'))
+        if(session()->has('user'))
         {
             if($request->isMethod('post') ||
                 $request->isMethod('patch') ||
                 $request->isMethod('delete'))
             {
-                $todo = session()->get('todo');
+                $user = session()->get('user');
 
                 if($request->isMethod('patch') || $request->isMethod('delete'))
                 {
-                    if(!is_null($id) && $id != $todo->id)
+                    if(!is_null($id) && $id != $user->id)
                     {
                         return $this->redirectToIndexPage();
                     }
                 }
-                session()->flash('action', $todo->action);
-                unset($todo->action);
-                return $todo;
+                session()->flash('action', $user->action);
+                unset($user->action);
+                return $user;
             }
         }
         return $this->redirectToIndexPage();
     }
 
-    private function createOrUpdate($request, $todo)
+    private function createOrUpdate($request, $user)
     {
-        $user = User::where('id', Auth::user()->id)->first();
         if($request->isMethod('patch'))
         {
-            $flag = $user->todos()->where('id', $todo->id)->update($this->defaultParameters($todo));
+            $flag = User::where('id', $user->id)->update($this->defaultParameters($user));
         }
         elseif($request->isMethod('delete'))
         {
-            $flag = $user->todos()->where('id', $todo->id)->update(['active' => FALSE]);
+            if(Auth::guard('user')->check() && Auth::guard('user')->user()->id == $user->id)
+            {
+                Auth::guard('user')->logout();
+            }
+            $flag = User::where('id', $user->id)->update(['active' => FALSE]);
         }
         elseif($request->isMethod('post'))
         {
-            $flag = $user->todos()->create($this->defaultParameters($todo));
+            $flag = User::create($this->defaultParameters($user));
         }
         return ($flag) ? $this->redirectToCompletePage() : $this->redirectToIndexPage();
     }
@@ -281,18 +304,13 @@ class UserController extends Controller
     {
         if($method == 'show' || $method == 'edit')
         {
-            $todo = Todo::where('id', $id)
-            ->where('active', 1)
+            $user = User::where('id', $id)
+            ->where('active', TRUE)
             ->first();
-
-            if($method == 'edit' && $todo->user_id  != Auth::user()->id)
+            if(!is_null($user))
             {
-                return $this->redirectToIndexPage();
-            }
-            if(!is_null($todo))
-            {
-                return view('todos/'.$method,[
-                    'todo' => $todo
+                return view('users/'.$method,[
+                    'user' => $user
                 ]);
             }
         }

@@ -31,9 +31,9 @@ Route::prefix('admin')->group(function() {
     Route::match(['get', 'post'], '/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
     Route::get('/', 'AdminController@index')->name('admin');
 
-    Route::get('/todo/search', 'UserController@search')->name('user.search');
-    Route::get('/todo/sort', 'UserController@sort')->name('user.sort');
-    Route::match(['get', 'post', 'patch', 'delete'], '/user/confirm/{id?}', 'TodoController@confirm')->name('user.confirm');
+    Route::get('/user/search', 'UserController@search')->name('user.search');
+    Route::get('/user/sort', 'UserController@sort')->name('user.sort');
+    Route::match(['get', 'post', 'patch', 'delete'], '/user/confirm/{id?}', 'UserController@confirm')->name('user.confirm');
     Route::get('/user/complete', 'UserController@complete')->name('user.complete');
     Route::resource('/user', 'UserController');
 

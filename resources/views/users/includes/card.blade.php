@@ -2,31 +2,31 @@
     <div class="card-body">
         <div class="row form-group">
             <div class="col-3">
-                <strong class="text-capitalize">date</strong>
+                <strong class="text-capitalize">name</strong>
             </div>
             <div class="col-9">
                 <p class="text-left">
-                    {{ isset($todo->date) ? $todo->date : $todo->updated_at->format('Y.m.d') }}
+                    {{ $user->name }}
                 </p>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-3">
-                <strong class="text-capitalize">title</strong>
+                <strong class="text-capitalize">email</strong>
             </div>
             <div class="col-9">
                 <p class="text-left">
-                    {{ $todo->title }}
+                    {{ $user->email }}
                 </p>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-3">
-                <strong class="text-capitalize">description</strong>
+                <strong class="text-capitalize">username</strong>
             </div>
             <div class="col-9">
                 <p class="text-left">
-                    {{ $todo->description }}
+                    {{ $user->username }}
                 </p>
             </div>
         </div>

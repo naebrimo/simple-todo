@@ -50,7 +50,7 @@
                             </th>
                             <th class="text-capitalize" colspan="25%">
                                 <form action="{{ route('user.sort') }}" method="GET">
-                                    <input type="hidden" name="email" value="{{ (isset($sort['email'])) ? $sort['username'] : 'asc' }}">
+                                    <input type="hidden" name="email" value="{{ (isset($sort['email'])) ? $sort['email'] : 'asc' }}">
                                     <button type="submit" class="btn btn-link text-dark text-capitalize"><strong>email</strong></button>
                                 </form>
                             </th>

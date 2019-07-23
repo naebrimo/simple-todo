@@ -5,22 +5,22 @@
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
             <div class="row mb-3">
-                <div class="col-2">
-                    <a href="{{ route('todo.index') }}" id="" class="btn btn-outline-secondary text-capitalize float-left">back to todo list</a>
+                <div class="col-3">
+                    <a href="{{ route('user.index') }}" id="" class="btn btn-outline-secondary text-capitalize float-left">back to user list</a>
                 </div>
-                <div class="col-8">
-                    @if(isset($todo))
-                        <h3 class="text-capitalize">edit todo</h3>
+                <div class="col-6">
+                    @if(isset($user))
+                        <h3 class="text-capitalize">edit user</h3>
                     @else
-                        <h3 class="text-capitalize">create todo</h3>
+                        <h3 class="text-capitalize">create user</h3>
                     @endif
                 </div>
             </div>
-            @if(isset($todo))
-                <form action="{{ route('todo.update', $todo->id) }}" method="POST" enctype="multipart/form-data" id="todoForm" class="card">
+            @if(isset($user))
+                <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" id="userForm" class="card">
                 @method('PATCH')
             @else
-                <form action="{{ route('todo.confirm') }}" method="POST" enctype="multipart/form-data" id="todoForm" class="card">
+                <form action="{{ route('user.confirm') }}" method="POST" enctype="multipart/form-data" id="userForm" class="card">
             @endif
                 @csrf
                 <div class="card-body">
@@ -33,7 +33,7 @@
                             @if(isset($request->date))
                                 <input id="titleInput" class="form-control" name="date" type="date" value="{{ $request->date }}" placeholder="Your date here ..." maxlength="30" required autofocus>
                             @else
-                                <input id="titleInput" class="form-control" name="date" type="date" value="{{ isset($todo) ? $todo->updated_at->format('Y-m-d') : old('date') }}" placeholder="Your date here ..." maxlength="30" required autofocus>
+                                <input id="titleInput" class="form-control" name="date" type="date" value="{{ isset($user) ? $user->updated_at->format('Y-m-d') : old('date') }}" placeholder="Your date here ..." maxlength="30" required autofocus>
                             @endif
                         </div>
                         <div class="col-5">
@@ -51,7 +51,7 @@
                             @if(isset($request->title))
                                 <input id="titleInput" class="form-control" name="title" type="text" value="{{ $request->title }}" placeholder="Your title here ..." maxlength="100" required>
                             @else
-                                <input id="titleInput" class="form-control" name="title" type="text" value="{{ isset($todo) ? $todo->title : old('title') }}" placeholder="Your title here ..." maxlength="100" required>
+                                <input id="titleInput" class="form-control" name="title" type="text" value="{{ isset($user) ? $user->title : old('title') }}" placeholder="Your title here ..." maxlength="100" required>
                             @endif
                         </div>
                         <div class="col-5">
@@ -69,7 +69,7 @@
                             @if(isset($request->description))
                                 <textarea id="descriptionInput" class="form-control" name="description" placeholder="Your description here ..." maxlength="100" cols="30" rows="5" required>{{ $request->description }}</textarea>
                             @else
-                                <textarea id="descriptionInput" class="form-control" name="description" placeholder="Your description here ..." maxlength="100" cols="30" rows="5" required>{{ isset($todo) ? $todo->description : old('description') }}</textarea>
+                                <textarea id="descriptionInput" class="form-control" name="description" placeholder="Your description here ..." maxlength="100" cols="30" rows="5" required>{{ isset($user) ? $user->description : old('description') }}</textarea>
                             @endif
                         </div>
                         <div class="col-9 offset-3">

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
-                @include('todos/includes/dialog')
+                @include('users/includes/dialog')
             </div>
         </div>
     </div>

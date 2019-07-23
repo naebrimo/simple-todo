@@ -39,66 +39,51 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @guest
+                        @if(Auth::guard('user')->check())
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-capitalize" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    @if (Route::has('register'))
-                                        {{ __('login / register') }}
-                                    @else
-                                        {{ __('login') }}
-                                    @endif
+                                <a id="navbarDropdownUser" class="nav-link dropdown-toggle text-capitalize" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::guard('user')->user()->name }} <span class="caret"></span>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item text-capitalize" href="{{ route('login') }}">login as user</a>
-                                    @if (Route::has('register'))
-                                        <a class="dropdown-item text-capitalize" href="{{ route('register') }}">register as user</a>
-                                    @endif
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-capitalize" href="{{ route('admin.login') }}">login as admin</a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownUser">
+                                    <a class="dropdown-item" href="{{ route('home') }}">Go to User Dashboard</a>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                        {{ __('Logout as User') }}
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </li>
                         @else
-                            @if(Auth::guard('user')->check())
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-capitalize" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::guard('user')->user()->name }} <span class="caret"></span>
+                            <li class="nav-item">
+                                <a class="nav-link text-capitalize" href="{{ route('login') }}">{{ __('Login as User') }}</a>
+                            </li>
+                        @endif
+                        @if(Auth::guard('admin')->check())
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdownAdmin" class="nav-link dropdown-toggle text-capitalize" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::guard('admin')->user()->name }} (admin) <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAdmin">
+                                    <a class="dropdown-item" href="{{ route('admin') }}">Go to Admin Dashboard</a>
+                                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('adminlogout-form').submit();">
+                                        {{ __('Logout as Admin') }}
                                     </a>
 
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('home') }}">Go to User Dashboard</a>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
-                                            {{ __('Logout as User') }}
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            @endif
-                            @if(Auth::guard('admin')->check())
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-capitalize" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::guard('admin')->user()->name }} <span class="caret"></span>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('admin') }}">Go to Admin Dashboard</a>
-                                        <a class="dropdown-item" href="{{ route('admin.logout') }}"
-                                        onclick="event.preventDefault();
-                                                        document.getElementById('adminlogout-form').submit();">
-                                            {{ __('Logout as Admin') }}
-                                        </a>
-
-                                        <form id="adminlogout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            @endif
-                        @endguest
+                                    <form id="adminlogout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link text-capitalize" href="{{ route('admin.login') }}">{{ __('Login as Admin') }}</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>

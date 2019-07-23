@@ -6,16 +6,14 @@
         <div class="col-md-8 text-center">
             <div class="row mb-3">
                 <div class="col-3">
-                    <a href="{{ route('todo.index') }}" id="" class="btn btn-outline-secondary text-capitalize float-left">back to todo list</a>
+                    <a href="{{ route('user.index') }}" id="" class="btn btn-outline-secondary text-capitalize float-left">back to user list</a>
                 </div>
                 <div class="col-6">
-                    <h3 class="text-capitalize">show todo</h3>
+                    <h3 class="text-capitalize">show user</h3>
                 </div>
             </div>
-            @include('todos/includes/card')
-            @if($todo->user_id == Auth::user()->id)
-                @include('todos/includes/btngrp')
-            @endif
+            @include('users/includes/card')
+            @include('users/includes/btngrp')
         </div>
     </div>
 </div>
